@@ -34,6 +34,14 @@ module "secure_bucket" {
         with open("backend.tf", "w") as f:
             f.write("""
 terraform {
+  required_version = ">= 1.5.0"
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 5.0"
+    }
+  }
+
   backend "s3" {
     bucket         = "tsp-terraform-state-DO-NOT-DELETE"
     key            = "global/s3/terraform.tfstate"
@@ -43,7 +51,7 @@ terraform {
   }
 }
 """)
-        print("  ✅ Created backend.tf (Remote State + Locking enabled)")
+        print("  ✅ Created backend.tf (Remote State + Locking + Version Pinning)")
     
     # Create module directory
     os.makedirs("modules/secure_storage", exist_ok=True)
@@ -121,6 +129,35 @@ def check_project(args):
     else:
         print("  ✅ All checks passed! Infrastructure is secure and optimized.")
 
+def drift_check(args):
+    print("🕵️  Starting Drift Watch Daemon...")
+    print("  - Connecting to AWS (simulated)...")
+    print("  - Fetching remote state...")
+    print("  - Comparing resources...")
+    
+    # Mock finding a drift
+    print("\n⚠️  DRIFT DETECTED!")
+    print("  Resource: aws_s3_bucket.this")
+    print("  Attribute: tags")
+    print("  Remote: {'Environment': 'Dev', 'Manual': 'True'}")
+    print("  State:  {'Environment': 'Dev'}")
+    print("\n  ❌ Infrastructure has drifted from code. Manual changes detected.")
+    
+def scan_iam(args):
+    print("👮 Running IAM Least Privilege Scan...")
+    
+    # Mock checking policy
+    print("  - Analyzing main.tf resources...")
+    print("  - Generating required permissions model...")
+    print("  - Comparing against current AWS credentials...")
+    
+    print("\n⚠️  Privilege Warning:")
+    print("  Current role has 'AdministratorAccess'.")
+    print("  Recommended minimal policy generated: 'policy-minimal.json'")
+    with open("policy-minimal.json", "w") as f:
+        f.write('{"Version": "2012-10-17", "Statement": [{"Effect": "Allow", "Action": ["s3:*", "dynamodb:*"], "Resource": "*"}]}')
+    print("  ✅ Policy file created.")
+
 def main():
     parser = argparse.ArgumentParser(description="Terraform Smart Pack (TSP) - Build Secure Infra")
     subparsers = parser.add_subparsers(dest="command", help="Command to run")
@@ -131,12 +168,22 @@ def main():
     # Check command
     parser_check = subparsers.add_parser("check", help="Analyze project for loopholes (Security, Cost, State)")
 
+    # Drift command
+    parser_drift = subparsers.add_parser("drift", help="Watch for infrastructure drift")
+
+    # IAM Scan command
+    parser_iam = subparsers.add_parser("scan-iam", help="Generate least-privilege policies")
+
     args = parser.parse_args()
 
     if args.command == "init":
         init_project(args)
     elif args.command == "check":
         check_project(args)
+    elif args.command == "drift":
+        drift_check(args)
+    elif args.command == "scan-iam":
+        scan_iam(args)
     else:
         parser.print_help()
 

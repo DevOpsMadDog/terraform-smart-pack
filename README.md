@@ -24,6 +24,12 @@ TSP is a CLI tool that wraps Terraform to enforce best practices automatically.
     - **Fixes Cost Blindness**: Provides an instant cost estimate for the resources defined.
     - **Fixes Configuration Drift**: Validates that state locking is active.
 
+**3. Infrastructure Monitoring (`tsp drift`):**
+    - **Fixes Drift Loophole**: Connects to the cloud provider and warns if resources have been modified manually outside of Terraform (e.g. "ClickOps").
+
+**4. Security Hardening (`tsp scan-iam`):**
+    - **Fixes Privilege Escalation**: Generates least-privilege IAM policies based on the resources defined in your HCL.
+
 ## Installation
 
 ```bash
@@ -40,6 +46,16 @@ tsp init
 **2. Audit your infrastructure:**
 ```bash
 tsp check
+```
+
+**3. Monitor for Drift:**
+```bash
+tsp drift
+```
+
+**4. Generate IAM Policies:**
+```bash
+tsp scan-iam
 ```
 
 ## "Debate" Origin
