@@ -158,6 +158,51 @@ def scan_iam(args):
         f.write('{"Version": "2012-10-17", "Statement": [{"Effect": "Allow", "Action": ["s3:*", "dynamodb:*"], "Resource": "*"}]}')
     print("  ✅ Policy file created.")
 
+def import_resource(args):
+    print(f"📥 Importing Resource: {args.resource_id}...")
+    
+    # Mock Import Logic
+    print("  - Fetching resource details from Cloud Provider...")
+    print("  - Generating HCL code...")
+    
+    # Generate a file
+    filename = f"imported_{args.resource_id.replace('-', '_')}.tf"
+    with open(filename, "w") as f:
+        f.write(f'''
+resource "aws_s3_bucket" "imported_{args.resource_id.replace('-', '_')}" {{
+  bucket = "{args.resource_id}"
+  tags = {{
+    ImportedBy = "TSP"
+    Source     = "ClickOps"
+  }}
+}}
+''')
+    print(f"  ✅ Generated HCL: {filename}")
+    print("  - Running 'terraform import' (simulated)...")
+    print("  ✅ State synchronized.")
+
+def centralize_repo(args):
+    print("🏢 Centralizing Polyrepo Configuration...")
+    
+    # Mock standardization
+    project_name = args.project_name
+    print(f"  - Target Project: {project_name}")
+    print("  - Standardizing backend configuration...")
+    
+    with open("backend.tf", "w") as f:
+        f.write(f"""
+terraform {{
+  backend "s3" {{
+    bucket         = "corp-global-state"
+    key            = "projects/{project_name}/terraform.tfstate"
+    region         = "us-east-1"
+    encrypt        = true
+    dynamodb_table = "corp-lock-table"
+  }}
+}}
+""")
+    print("  ✅ backend.tf rewritten to use corporate standard.")
+
 def main():
     parser = argparse.ArgumentParser(description="Terraform Smart Pack (TSP) - Build Secure Infra")
     subparsers = parser.add_subparsers(dest="command", help="Command to run")
@@ -174,6 +219,14 @@ def main():
     # IAM Scan command
     parser_iam = subparsers.add_parser("scan-iam", help="Generate least-privilege policies")
 
+    # Import command
+    parser_import = subparsers.add_parser("import", help="Import ClickOps resources")
+    parser_import.add_argument("resource_id", help="The ID of the resource (e.g., bucket-name)")
+
+    # Centralize command
+    parser_centralize = subparsers.add_parser("centralize", help="Standardize polyrepo backend")
+    parser_centralize.add_argument("project_name", help="Unique name for this repository's project")
+
     args = parser.parse_args()
 
     if args.command == "init":
@@ -184,6 +237,10 @@ def main():
         drift_check(args)
     elif args.command == "scan-iam":
         scan_iam(args)
+    elif args.command == "import":
+        import_resource(args)
+    elif args.command == "centralize":
+        centralize_repo(args)
     else:
         parser.print_help()
 

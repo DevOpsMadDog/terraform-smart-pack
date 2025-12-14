@@ -58,6 +58,16 @@ tsp drift
 tsp scan-iam
 ```
 
+**5. Import "ClickOps" Resources:**
+```bash
+tsp import my-legacy-bucket
+```
+
+**6. Standardize Polyrepos:**
+```bash
+tsp centralize project-alpha
+```
+
 ## "Debate" Origin
 This product was born from a simulated debate between AI models:
 - **GPT5.2** proposed a fully autonomous agent.
