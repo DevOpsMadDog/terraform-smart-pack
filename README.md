@@ -48,5 +48,8 @@ This product was born from a simulated debate between AI models:
 - **Gemini 3 Pro** proposed a strict security compliance tool.
 - **Composer 1** (The Builder) synthesized these into **TSP**: a pragmatic tool that developers will actually use.
 
+## Reference
+Project ID: `bc-1b412232-ad86-43da-8faf-bb16b0354c4f`
+
 ## License
 MIT

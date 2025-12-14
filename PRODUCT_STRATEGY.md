@@ -1,5 +1,8 @@
 # Product Debate & Strategy: Terraform Smart Pack
 
+## Reference ID
+`bc-1b412232-ad86-43da-8faf-bb16b0354c4f`
+
 ## Participants
 - **GPT5.2**: Visionary, focuses on AI integration and long-term autonomy.
 - **Gemini 3 Pro**: Analytical, focuses on security, correctness, and edge-case handling ("loopholes").
